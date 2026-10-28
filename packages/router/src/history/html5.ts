@@ -22,7 +22,20 @@ import { assign } from '../utils'
 
 type PopStateListener = (this: Window, ev: PopStateEvent) => any
 
-let createBaseLocation = () => location.protocol + '//' + location.host
+/**
+ * Returns the current base location, including the userinfo (`user:password@`)
+ * of the document URL. Browsers throw a `SecurityError` when the URL passed to
+ * `history.replaceState()`/`pushState()` has different credentials than the
+ * current document URL, so they must be preserved.
+ * @internal
+ */
+function createBaseLocation() {
+  const { protocol, username, password, host } = new URL(location.href)
+  const userinfo = username
+    ? `${username}${password ? `:${password}` : ''}@`
+    : ''
+  return `${protocol}//${userinfo}${host}`
+}
 
 interface StateEntry extends HistoryState {
   back: HistoryLocation | null

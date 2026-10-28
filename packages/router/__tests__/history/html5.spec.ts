@@ -104,6 +104,31 @@ describe('History HTMl5', () => {
     spy.mockRestore()
   })
 
+  it('keeps the userinfo of the document URL on the initial replaceState', () => {
+    getWindow().happyDOM.setURL('http://test:test@localhost:3000/')
+    let spy = vi.spyOn(window.history, 'replaceState')
+    createWebHistory()
+    expect(spy).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.any(String),
+      'http://test:test@localhost:3000/'
+    )
+    spy.mockRestore()
+  })
+
+  it('keeps the userinfo of the document URL when pushing', () => {
+    getWindow().happyDOM.setURL('http://test:test@localhost:3000/')
+    let history = createWebHistory()
+    let spy = vi.spyOn(window.history, 'pushState')
+    history.push('/foo')
+    expect(spy).toHaveBeenLastCalledWith(
+      expect.anything(),
+      expect.any(String),
+      'http://test:test@localhost:3000/foo'
+    )
+    spy.mockRestore()
+  })
+
   describe('specific to base containing a hash', () => {
     it('calls push with hash part of the url with a base', () => {
       getWindow().happyDOM.setURL('file:///usr/etc/index.html')
