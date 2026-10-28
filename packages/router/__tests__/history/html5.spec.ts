@@ -129,6 +129,18 @@ describe('History HTMl5', () => {
     spy.mockRestore()
   })
 
+  it('keeps a password-only userinfo of the document URL', () => {
+    getWindow().happyDOM.setURL('http://:secret@localhost:3000/')
+    let spy = vi.spyOn(window.history, 'replaceState')
+    createWebHistory()
+    expect(spy).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.any(String),
+      'http://:secret@localhost:3000/'
+    )
+    spy.mockRestore()
+  })
+
   describe('specific to base containing a hash', () => {
     it('calls push with hash part of the url with a base', () => {
       getWindow().happyDOM.setURL('file:///usr/etc/index.html')

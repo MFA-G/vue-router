@@ -31,9 +31,8 @@ type PopStateListener = (this: Window, ev: PopStateEvent) => any
  */
 function createBaseLocation() {
   const { protocol, username, password, host } = new URL(location.href)
-  const userinfo = username
-    ? `${username}${password ? `:${password}` : ''}@`
-    : ''
+  const userinfo =
+    username || password ? `${username}${password ? `:${password}` : ''}@` : ''
   return `${protocol}//${userinfo}${host}`
 }
 
